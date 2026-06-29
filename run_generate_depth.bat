@@ -8,6 +8,27 @@ set "PYTHON=python"
 :: ─────────────────────────────────────────────────────────────────────────────
 
 cd /d "%TOOL_DIR%"
+
+where %PYTHON% >nul 2>&1
+if errorlevel 1 (
+    echo.
+    echo  ERROR: Python not found. Install Python and add it to PATH, then re-run.
+    echo  https://www.python.org/downloads/
+    echo.
+    pause
+    exit /b 1
+)
+
+%PYTHON% -c "import depth_pro" >nul 2>&1
+if errorlevel 1 (
+    echo.
+    echo  ERROR: depth_pro module not found.
+    echo  Run:  pip install -e "%TOOL_DIR%"
+    echo.
+    pause
+    exit /b 1
+)
+
 set "ERROR_COUNT=0"
 if not exist "%TOOL_DIR%\logs" mkdir "%TOOL_DIR%\logs"
 for /f "usebackq delims=" %%T in (`powershell -NoProfile -Command "Get-Date -Format 'yyyy-MM-dd_HH-mm-ss'"`) do set "TS=%%T"
@@ -39,8 +60,8 @@ if "!ERROR_COUNT!"=="0" (
     echo  All files processed successfully.
     echo All files processed successfully. >> "%LOG%"
 ) else (
-    echo  Finished with !ERROR_COUNT! error(s). Check output above.
-    echo Finished with !ERROR_COUNT! error(s). >> "%LOG%"
+    echo  Finished with !ERROR_COUNT! errors. Check output above.
+    echo Finished with !ERROR_COUNT! errors. >> "%LOG%"
 )
 echo  Log: %LOG%
 echo.
@@ -65,8 +86,8 @@ echo Input: %INPUT% >> "%LOG%"
 echo [1/2] Estimating depth...
 %PYTHON% -m depth_pro.cli.run -i "%INPUT%" -o "%OUT_DIR%" --skip-display >> "%LOG%" 2>&1
 if errorlevel 1 (
-    echo  ERROR: depth-pro-run failed.
-    echo ERROR: depth-pro-run failed. >> "%LOG%"
+    echo  ERROR: depth inference failed. See log for details.
+    echo ERROR: depth inference failed. >> "%LOG%"
     set /a ERROR_COUNT+=1
     exit /b 1
 )
@@ -79,9 +100,9 @@ if not exist "%NPZ%" (
 )
 
 echo [2/2] Converting NPZ to EXR...
-"%PYTHON%" "%TOOL_DIR%\npz_to_exr.py" -i "%NPZ%" --no-png >> "%LOG%" 2>&1
+%PYTHON% "%TOOL_DIR%\npz_to_exr.py" -i "%NPZ%" --no-png >> "%LOG%" 2>&1
 if errorlevel 1 (
-    echo  ERROR: npz_to_exr.py failed.
+    echo  ERROR: npz_to_exr.py failed. See log for details.
     echo ERROR: npz_to_exr.py failed. >> "%LOG%"
     set /a ERROR_COUNT+=1
     exit /b 1
