@@ -22,11 +22,22 @@ if errorlevel 1 (
 %PYTHON% -c "import depth_pro" >nul 2>&1
 if errorlevel 1 (
     echo.
-    echo  ERROR: depth_pro module not found.
-    echo  Run:  pip install -e "%TOOL_DIR%"
+    echo  depth_pro is not installed.
+    echo  Command: pip install -e "%TOOL_DIR%"
     echo.
-    pause
-    exit /b 1
+    choice /c yn /n /m "  Run it now? [Y=yes / N=quit] "
+    if errorlevel 2 ( echo. & pause & exit /b 1 )
+    echo.
+    %PYTHON% -m pip install -e "%TOOL_DIR%"
+    if errorlevel 1 (
+        echo.
+        echo  Install failed. See output above.
+        pause
+        exit /b 1
+    )
+    echo.
+    echo  Installed. Continuing...
+    echo.
 )
 
 set "ERROR_COUNT=0"
