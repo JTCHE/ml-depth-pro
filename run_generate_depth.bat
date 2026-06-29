@@ -19,7 +19,7 @@ if errorlevel 1 (
     exit /b 1
 )
 
-%PYTHON% -c "import depth_pro" >nul 2>&1
+%PYTHON% -c "import depth_pro, imageio" >nul 2>&1
 if errorlevel 1 (
     echo.
     echo  depth_pro is not installed.
