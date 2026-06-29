@@ -51,7 +51,7 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter
     )
     parser.add_argument('-i', '--input', required=True, help='Input NPZ file path')
-    parser.add_argument('-o', '--output', help='Output EXR file path (default: same as input with .exr extension)')
+    parser.add_argument('-o', '--output', help='Output EXR file path or directory (default: same dir as input)')
     parser.add_argument('--no-png', action='store_true', help='Skip PNG output')
 
     args = parser.parse_args()
@@ -64,7 +64,8 @@ def main():
 
     # Determine output paths
     if args.output:
-        exr_path = Path(args.output)
+        out = Path(args.output)
+        exr_path = (out / input_path.stem).with_suffix('.exr') if out.is_dir() else out
     else:
         exr_path = input_path.with_suffix('.exr')
 

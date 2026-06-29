@@ -83,7 +83,7 @@ exit /b 0
 :process
 set "INPUT=%~f1"
 set "STEM=%~n1"
-set "OUT_DIR=%~dp1depth"
+set "OUT_DIR=%~dp1%~n1"
 set "NPZ=%OUT_DIR%\%STEM%.npz"
 set "EXR=%OUT_DIR%\%STEM%.exr"
 
