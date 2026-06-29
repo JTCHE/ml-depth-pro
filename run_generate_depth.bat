@@ -86,6 +86,7 @@ set "STEM=%~n1"
 set "OUT_DIR=%~dp1%~n1"
 set "NPZ=%OUT_DIR%\%STEM%.npz"
 set "EXR=%OUT_DIR%\%STEM%.exr"
+set "PNG=%OUT_DIR%\%STEM%.png"
 
 echo.
 echo ----------------------------------------
@@ -111,7 +112,7 @@ if not exist "%NPZ%" (
 )
 
 echo [2/2] Converting NPZ to EXR...
-%PYTHON% "%TOOL_DIR%\npz_to_exr.py" -i "%NPZ%" --no-png >> "%LOG%" 2>&1
+%PYTHON% "%TOOL_DIR%\npz_to_exr.py" -i "%NPZ%" >> "%LOG%" 2>&1
 if errorlevel 1 (
     echo  ERROR: npz_to_exr.py failed. See log for details.
     echo ERROR: npz_to_exr.py failed. >> "%LOG%"
@@ -120,5 +121,7 @@ if errorlevel 1 (
 )
 
 echo  Done -- %EXR%
+echo  Done -- %PNG%
 echo Done: %EXR% >> "%LOG%"
+echo Done: %PNG% >> "%LOG%"
 exit /b 0

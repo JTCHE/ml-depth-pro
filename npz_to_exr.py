@@ -39,9 +39,8 @@ def save_exr(depth, output_path):
 
 
 def save_normalized_png(depth, output_path):
-    """Save normalized depth map as 16-bit PNG."""
     depth_normalized = ((depth - depth.min()) / (depth.max() - depth.min()) * 65535).astype(np.uint16)
-    imageio.imwrite(str(output_path), depth_normalized)
+    imageio.imwrite(str(output_path), depth_normalized, compress_level=0)
     print(f"PNG saved: {output_path}")
 
 
@@ -69,7 +68,7 @@ def main():
     else:
         exr_path = input_path.with_suffix('.exr')
 
-    png_path = exr_path.with_stem(f"{exr_path.stem}-normalized").with_suffix('.png')
+    png_path = exr_path.with_suffix('.png')
 
     # Process
     try:

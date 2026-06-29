@@ -10,7 +10,6 @@ import logging
 from pathlib import Path
 
 import numpy as np
-import PIL.Image
 import torch
 from matplotlib import pyplot as plt
 from tqdm import tqdm
@@ -93,17 +92,6 @@ def run(args):
             LOGGER.info(f"Saving depth map to: {str(output_file)}")
             output_file.parent.mkdir(parents=True, exist_ok=True)
             np.savez_compressed(output_file, depth=depth)
-
-            # Save as color-mapped "turbo" jpg image.
-            cmap = plt.get_cmap("turbo")
-            color_depth = (cmap(inverse_depth_normalized)[..., :3] * 255).astype(
-                np.uint8
-            )
-            color_map_output_file = str(output_file) + ".jpg"
-            LOGGER.info(f"Saving color-mapped depth to: : {color_map_output_file}")
-            PIL.Image.fromarray(color_depth).save(
-                color_map_output_file, format="JPEG", quality=90
-            )
 
         # Display the image and estimated depth map.
         if not args.skip_display:
