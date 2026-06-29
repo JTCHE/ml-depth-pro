@@ -2,17 +2,19 @@
 setlocal enabledelayedexpansion
 
 :: ── Config ────────────────────────────────────────────────────────────────────
-set "TOOL_DIR=C:\Users\john\Desktop\Tools\Apple-ML-Depth-Pro"
-set "PYTHON=C:\Users\john\AppData\Local\Programs\Python\Python314\python.exe"
-set "DEPTH_PRO=C:\Users\john\AppData\Local\Programs\Python\Python314\Scripts\depth-pro-run.exe"
-set "LOG=%TEMP%\depth_pro_last.log"
+set "TOOL_DIR=%~dp0"
+set "TOOL_DIR=%TOOL_DIR:~0,-1%"
+set "PYTHON=python"
+set "DEPTH_PRO=depth-pro-run"
 :: ─────────────────────────────────────────────────────────────────────────────
 
 cd /d "%TOOL_DIR%"
 set "ERROR_COUNT=0"
-for /f "usebackq" %%T in (`powershell -NoProfile -Command "Get-Date -Format 'yyyy-MM-dd HH:mm:ss'"`) do set "TS=%%T"
+if not exist "%TOOL_DIR%\logs" mkdir "%TOOL_DIR%\logs"
+for /f "usebackq delims=" %%T in (`powershell -NoProfile -Command "Get-Date -Format 'yyyy-MM-dd_HH-mm-ss'"`) do set "TS=%%T"
+set "LOG=%TOOL_DIR%\logs\depth_pro_%TS%.log"
 echo ======================================== > "%LOG%"
-echo  Run: !TS! >> "%LOG%"
+echo  Run: %TS% >> "%LOG%"
 echo ======================================== >> "%LOG%"
 
 if "%~1"=="" (
