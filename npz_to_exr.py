@@ -4,7 +4,7 @@ from pathlib import Path
 import numpy as np
 import OpenEXR
 import Imath
-import imageio
+from exr_writer import save_exr as _write_exr
 
 
 def load_npz(npz_path):
@@ -38,10 +38,11 @@ def save_exr(depth, output_path):
     print(f"EXR saved: {output_path}")
 
 
-def save_normalized_png(depth, output_path):
-    depth_normalized = ((depth - depth.min()) / (depth.max() - depth.min()) * 65535).astype(np.uint16)
-    imageio.imwrite(str(output_path), depth_normalized, compress_level=0)
-    print(f"PNG saved: {output_path}")
+def save_normalized_exr(depth, output_path):
+    d_min, d_max = depth.min(), depth.max()
+    normalized = ((depth - d_min) / (d_max - d_min)).astype(np.float32)
+    _write_exr(normalized, output_path)
+    print(f"Normalized EXR saved: {output_path}")
 
 
 def main():
@@ -68,7 +69,7 @@ def main():
     else:
         exr_path = input_path.with_suffix('.exr')
 
-    png_path = exr_path.with_suffix('.png')
+    normalized_exr_path = exr_path.with_name(exr_path.stem + '_normalized.exr')
 
     # Process
     try:
@@ -76,7 +77,7 @@ def main():
         save_exr(depth, exr_path)
 
         if not args.no_png:
-            save_normalized_png(depth, png_path)
+            save_normalized_exr(depth, normalized_exr_path)
 
         print("Conversion completed successfully")
     except Exception as e:

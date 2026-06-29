@@ -86,7 +86,7 @@ set "STEM=%~n1"
 set "OUT_DIR=%~dp1%~n1"
 set "NPZ=%OUT_DIR%\%STEM%.npz"
 set "EXR=%OUT_DIR%\%STEM%.exr"
-set "PNG=%OUT_DIR%\%STEM%.png"
+set "NORM_EXR=%OUT_DIR%\%STEM%_normalized.exr"
 
 echo.
 echo ----------------------------------------
@@ -121,7 +121,7 @@ if errorlevel 1 (
 )
 
 echo  Done -- %EXR%
-echo  Done -- %PNG%
+echo  Done -- %NORM_EXR%
 echo Done: %EXR% >> "%LOG%"
-echo Done: %PNG% >> "%LOG%"
+echo Done: %NORM_EXR% >> "%LOG%"
 exit /b 0
