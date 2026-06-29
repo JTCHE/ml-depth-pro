@@ -5,7 +5,6 @@ setlocal enabledelayedexpansion
 set "TOOL_DIR=%~dp0"
 set "TOOL_DIR=%TOOL_DIR:~0,-1%"
 set "PYTHON=python"
-set "DEPTH_PRO=depth-pro-run"
 :: ─────────────────────────────────────────────────────────────────────────────
 
 cd /d "%TOOL_DIR%"
@@ -64,7 +63,7 @@ echo ----------------------------------------
 echo Input: %INPUT% >> "%LOG%"
 
 echo [1/2] Estimating depth...
-"%DEPTH_PRO%" -i "%INPUT%" -o "%OUT_DIR%" --skip-display >> "%LOG%" 2>&1
+%PYTHON% -m depth_pro.cli.run -i "%INPUT%" -o "%OUT_DIR%" --skip-display >> "%LOG%" 2>&1
 if errorlevel 1 (
     echo  ERROR: depth-pro-run failed.
     echo ERROR: depth-pro-run failed. >> "%LOG%"
